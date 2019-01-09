@@ -8,6 +8,7 @@ using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using MPACore.PhoneBook.PhoneBooks.Dtos;
 using MPACore.PhoneBook.PhoneBooks.Persons;
@@ -23,11 +24,6 @@ namespace MPACore.PhoneBook.PhoneBooks
             _personRepository = personRepository;
         }
 
-        public Task CreateOrUpdatePersonAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task CreateOrUpdatePersonAsync(CreateOrUpdatePersonDto input)
         {
             if (input.PersonEditDto.Id.HasValue)
@@ -38,13 +34,17 @@ namespace MPACore.PhoneBook.PhoneBooks
             {
                 await CreatePersonAsync(input.PersonEditDto);
             }
-
-            throw new NotImplementedException();
         }
 
-        public Task DeletePersonAsync(EntityDto input)
+        public async Task DeletePersonAsync(EntityDto input)
         {
-            throw new NotImplementedException();
+            var entity = await _personRepository.GetAsync(input.Id);
+            if (entity==null)
+            {
+                throw new UserFriendlyException("该联系人已经消失在数据库中，无法二次删除");
+            }
+
+            await _personRepository.DeleteAsync(input.Id);
         }
         
         public async Task<PagedResultDto<PersonListDto>> GetPagedPersonAsync(GetPersonInput input)
@@ -60,14 +60,11 @@ namespace MPACore.PhoneBook.PhoneBooks
             return new PagedResultDto<PersonListDto>(personCount, dtos);
         }
 
-        public Task<PersonListDto> GetPersonByIdAsync()
+        public async Task<PersonListDto> GetPersonByIdAsync(NullableIdDto input)
         {
-            throw new NotImplementedException();
-        }
+            var person = await _personRepository.GetAsync(input.Id.Value);
 
-        public Task<PersonListDto> GetPersonByIdAsync(NullableIdDto input)
-        {
-            throw new NotImplementedException();
+            return person.MapTo<PersonListDto>();
         }
 
         protected async Task UpdatePersonAsync(PersonEditDto input)
@@ -79,7 +76,24 @@ namespace MPACore.PhoneBook.PhoneBooks
 
         protected async Task CreatePersonAsync(PersonEditDto input)
         {
-            _personRepository.InsertAsync(input.MapTo<Person>());
+            await _personRepository.InsertAsync(input.MapTo<Person>());
+        }
+
+        public async Task<GetPersonForEditOutput> GetPersonForEditAsync(NullableIdDto input)
+        {
+            var output = new GetPersonForEditOutput();
+            PersonEditDto personEditDto;
+            if (input.Id.HasValue)
+            {
+                var entity = await _personRepository.GetAsync(input.Id.Value);
+                personEditDto = entity.MapTo<PersonEditDto>();
+            }
+            else
+            {
+                personEditDto = new PersonEditDto();
+            }
+            output.Person = personEditDto;
+            return output;
         }
     }
 }
