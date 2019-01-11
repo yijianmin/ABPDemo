@@ -1,7 +1,8 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using MPACore.PhoneBook.PhoneBooks.Persons;
-using MPACore.PhoneBook.PhoneBooks.PhoneNumber.Dto;
+using MPACore.PhoneBook.PhoneBooks.PhoneNumbers;
+using MPACore.PhoneBook.PhoneBooks.PhoneNumbers.Dto;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,7 @@ using System.Text;
 
 namespace MPACore.PhoneBook.PhoneBooks.Dtos
 {
-    [AutoMapTo(typeof(Person))]
+    [AutoMapTo(typeof(PhoneNumber))]
     public class PersonEditDto
     {
         public int? Id { get; set; }
@@ -36,6 +37,6 @@ namespace MPACore.PhoneBook.PhoneBooks.Dtos
 
 
 
-        public List<PhoneNumberEditDto> PersonNumbers { get; set; }
+        public List<PhoneNumberEditDto> PhoneNumbers { get; set; }
     }
 }

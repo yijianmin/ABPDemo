@@ -1,11 +1,13 @@
-﻿using MPACore.PhoneBook.PhoneBooks.PhoneNumbers;
+﻿using Abp.AutoMapper;
+using MPACore.PhoneBook.PhoneBooks.PhoneNumbers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace MPACore.PhoneBook.PhoneBooks.PhoneNumber.Dto
+namespace MPACore.PhoneBook.PhoneBooks.PhoneNumbers.Dto
 {
+    [AutoMapFrom(typeof(PhoneNumber))]
     public class PhoneNumberListDto
     {
         /// <summary>
@@ -18,6 +20,6 @@ namespace MPACore.PhoneBook.PhoneBooks.PhoneNumber.Dto
         /// <summary>
         /// 类型
         /// </summary>
-        public PhoneNumberType PhoneNumberType { get; set; }
+        public PhoneNumberType Type { get; set; }
     }
 }

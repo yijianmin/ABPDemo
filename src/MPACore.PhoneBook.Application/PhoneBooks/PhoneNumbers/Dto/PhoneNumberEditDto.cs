@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace MPACore.PhoneBook.PhoneBooks.PhoneNumber.Dto
+namespace MPACore.PhoneBook.PhoneBooks.PhoneNumbers.Dto
 {
     public class PhoneNumberEditDto
     {
